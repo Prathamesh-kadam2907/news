@@ -7,7 +7,9 @@ const NewsBoard = ({ category }) => {
 
   useEffect(() => {
     setLoading(true);
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${c16bcef51f4341d4beb6a87520731a08}`;
+    let url = `https://gnews.io/api/v4/search?q=${category}&lang=en&max=5&apikey=${
+      import.meta.env.VITE_API_KEY
+    }`;
 
     fetch(url)
       .then((response) => response.json())
@@ -68,7 +70,7 @@ const NewsBoard = ({ category }) => {
                   key={index}
                   title={news.title}
                   description={news.description}
-                  src={news.urlToImage}
+                  src={news.image}
                   url={news.url}
                 />
               ))}
