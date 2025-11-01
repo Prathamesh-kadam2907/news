@@ -64,15 +64,16 @@ const NewsBoard = ({ category }) => {
         ) : (
           /* News Grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((news, index) => (
-              <NewsItem
-                key={index}
-                title={news.title}
-                description={news.description}
-                src={news.urlToImage}
-                url={news.url}
-              />
-            ))}
+            {articles &&
+              articles.map((news, index) => (
+                <NewsItem
+                  key={index}
+                  title={news.title}
+                  description={news.description}
+                  src={news.urlToImage}
+                  url={news.url}
+                />
+              ))}
           </div>
         )}
       </div>
