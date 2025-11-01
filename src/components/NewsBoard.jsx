@@ -6,25 +6,17 @@ const NewsBoard = ({ category }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNews = async () => {
-      setLoading(true);
-      try {
-        // ✅ Call your Vercel serverless API instead of GNews directly
-        const response = await fetch(`/api/news?q=${category}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch news");
-        }
+    setLoading(true);
+    let url = `https://gnews.io/api/v4/search?q=${category}&lang=en&max=5&apikey=${
+      import.meta.env.VITE_API_KEY
+    }`;
 
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error("Error fetching news:", error);
-      } finally {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setArticles(data.articles);
         setLoading(false);
-      }
-    };
-
-    fetchNews();
+      });
   }, [category]);
 
   return (
@@ -36,16 +28,16 @@ const NewsBoard = ({ category }) => {
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-purple-600 rounded-full opacity-10 blur-3xl"></div>
 
           <div className="relative">
-            <h2 className="text-6xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
+            <h2 className="text-6xl md:text-7xl  font-extrabold text-white mb-6 tracking-tight">
               Latest{" "}
               <span className="relative inline-block">
                 <span className="absolute inset-0 bg-gradient-to-r from-red-600 to-pink-600 blur-lg opacity-70"></span>
-                <span className="relative bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 py-3 rounded-2xl transform hover:scale-105 transition-transform duration-300 inline-block shadow-2xl">
+                <span className="relative bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 py-3  rounded-2xl transform hover:scale-105 transition-transform duration-300 inline-block shadow-2xl">
                   News
                 </span>
               </span>
             </h2>
-            <p className="text-gray-400 text-xl md:text-2xl font-light">
+            <p className="text-gray-400 text-xl md:text-2xl font-light ">
               Stay updated with the{" "}
               <span className="text-purple-400 font-semibold">
                 latest headlines
@@ -60,7 +52,7 @@ const NewsBoard = ({ category }) => {
           </div>
         </div>
 
-        {/* Loading Skeleton */}
+        {/* Loading State */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
@@ -72,7 +64,7 @@ const NewsBoard = ({ category }) => {
         ) : (
           /* News Grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.length > 0 ? (
+            {articles &&
               articles.map((news, index) => (
                 <NewsItem
                   key={index}
@@ -81,12 +73,7 @@ const NewsBoard = ({ category }) => {
                   src={news.image}
                   url={news.url}
                 />
-              ))
-            ) : (
-              <p className="text-center text-gray-400 text-xl">
-                No news found for this category.
-              </p>
-            )}
+              ))}
           </div>
         )}
       </div>
